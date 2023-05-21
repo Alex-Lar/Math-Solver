@@ -125,7 +125,7 @@ status_bar(rounds, scores, correct, incorrect, operation)
 
 -- TODO: Create decent gameover message output
 if correct > incorrect then
-	print("\n\tGood Job! My boyyyyyy!")
+	print("\n\tGood Job! (ﾉ◕ヮ◕)ﾉ")
 else
 	print("\n\tYou lost, but...")
 	print("\tDon't worry.")
