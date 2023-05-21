@@ -1,6 +1,6 @@
 local function logo()
-	print("\n\tArithmetic Gym")
-	print("\t--------------\n")
+	print("\n\tMath Solver")
+	print("\t-----------\n")
 end
 
 local function get_answer(oper, x, y)
@@ -47,7 +47,7 @@ range = tonumber(io.read())
 
 if type(range) ~= "number" then
 	while type(range) ~= "number" do
-		io.write("\tThe value for range must be a number: ")
+		io.write("\n\tThe value for range must be a number: ")
 		range = tonumber(io.read())
 	end
 end
@@ -60,7 +60,7 @@ rounds = tonumber(io.read())
 
 if type(rounds) ~= "number" then
 	while type(rounds) ~= "number" do
-		io.write("\tThe value for rounds must be a number: ")
+		io.write("\n\tThe value for rounds must be a number: ")
 		rounds = tonumber(io.read())
 	end
 end
@@ -73,7 +73,7 @@ operation = io.read()
 
 if operation ~= "+" and operation ~= "-" and operation ~= "*" and operation ~= "/" then
 	while operation ~= "+" and operation ~= "-" and operation ~= "*" and operation ~= "/" do
-		io.write("Please, try again (+, -, /, *): ")
+		io.write("\tPlease, try again (+, -, /, *): ")
 		operation = io.read()
 	end
 end
