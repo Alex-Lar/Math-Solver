@@ -1,6 +1,6 @@
 <h1 align="center">Math Solver</h1>
 
-![1](./usage.gif)
+![1](./assets/usage.gif)
 
 
 ## Description
