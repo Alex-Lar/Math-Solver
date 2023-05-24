@@ -1,3 +1,6 @@
+local q = require("question")
+local is_valid = require("is_valid")
+local parser = require("parser")
 local c = require("colors")
 
 local yellow = c.yellow
@@ -11,6 +14,7 @@ local scores = 30
 local correct = 0
 local incorrect = 0
 local operation
+local colors
 
 local function logo()
 	print("\n\t" .. cyan("Math Solver"))
@@ -29,9 +33,9 @@ local function get_answer(oper, x, y)
 	end
 end
 
-local function status_bar(rounds, scores, correct, incorrect, operation)
-	local inc = incorrect == 0 and incorrect or red(incorrect)
-	local corr = correct == 0 and correct or green(correct)
+local function status_bar(rounds, scores, correct, incorrect, oper)
+	correct = correct == 0 and correct or green(correct)
+	incorrect = incorrect == 0 and incorrect or red(incorrect)
 	scores = scores < 15 and red(scores) or yellow(scores)
 
 	print(
@@ -40,48 +44,34 @@ local function status_bar(rounds, scores, correct, incorrect, operation)
 			.. cyan("\t\t\tscores: ")
 			.. scores
 			.. cyan("\t\t\tcorrect: ")
-			.. corr
+			.. correct
 			.. cyan("\t\t\tincorrect: ")
-			.. inc
+			.. incorrect
 			.. cyan("\t\t\tOperations: ")
-			.. yellow(operation)
+			.. yellow(oper)
 	)
 
 	-- TODO: Make this responsive
 	print(cyan(string.rep("-", 190, "")))
 end
 
+-- Logo
 os.execute("clear")
 logo()
 
-io.write("\tPlease, input " .. yellow("max range") .. " for numbers: ")
-range = tonumber(io.read())
+-- Questions
+range = q.ask({
+	main = "\tPlease, input " .. yellow("max range") .. " for numbers: ",
+	error = "\n\tThe value for range must be a number: ",
+}, is_valid.range, tonumber)
 
-if type(range) ~= "number" then
-	while type(range) ~= "number" do
-		io.write("\n\tThe value for range must be a number: ")
-		range = tonumber(io.read())
-	end
-end
+rounds = q.ask({
+	main = "\n\tHow many " .. yellow("rounds") .. " do you want to play: ",
+	error = "\n\tThe value for rounds must be a number: ",
+}, is_valid.rounds, tonumber)
 
--- os.execute("clear")
--- logo()
-
-io.write("\n\tHow many " .. yellow("rounds") .. " do you want to play: ")
-rounds = tonumber(io.read())
-
-if type(rounds) ~= "number" then
-	while type(rounds) ~= "number" do
-		io.write("\n\tThe value for rounds must be a number: ")
-		rounds = tonumber(io.read())
-	end
-end
-
--- os.execute("clear")
--- logo()
-
-io.write(
-	"\n\t"
+operation = q.ask({
+	main = "\n\t"
 		.. yellow("Type")
 		.. " of arithmetic operation ("
 		.. yellow("+")
@@ -91,36 +81,25 @@ io.write(
 		.. yellow("/")
 		.. ", "
 		.. yellow("*")
-		.. "): "
-)
-operation = io.read()
+		.. "): ",
+	error = "\n\tPlease, try again (" .. yellow("+") .. ", " .. yellow("-") .. ", " .. yellow("/") .. ", " .. yellow(
+		"*"
+	) .. "): ",
+}, is_valid.operation)
 
-if operation ~= "+" and operation ~= "-" and operation ~= "*" and operation ~= "/" then
-	while operation ~= "+" and operation ~= "-" and operation ~= "*" and operation ~= "/" do
-		io.write("\tPlease, try again (+, -, /, *): ")
-		operation = io.read()
-	end
-end
+colors = q.ask({
+	main = "\n\tColorscheme (" .. yellow("y") .. "\\" .. yellow("n") .. "): ",
+	error = "\n\tAnswer should be yes or no (" .. yellow("y") .. "\\" .. yellow("n") .. "): ",
+}, is_valid.colors, parser.to_bool)
 
-io.write("\n\tColorscheme (y\\n): ")
-local colors = string.lower(io.read())
-
-if colors ~= "y" and colors ~= "n" and colors ~= "yes" and colors ~= "no" then
-	while colors ~= "y" and colors ~= "n" and colors ~= "yes" and colors ~= "no" do
-		io.write("\n\tAnswer should be yes or no (y\n): ")
-		colors = string.lower(io.read())
-	end
-end
-
-print("\n\t" .. green("Have a nice game!"))
-
-if colors == "no" or colors == "n" then
+if not colors then
 	cyan = c.white
 	red = c.white
 	yellow = c.white
 	green = c.white
 end
 
+print("\n\t" .. green("Have a nice game!"))
 os.execute("sleep " .. 1)
 
 -- Game Loop
