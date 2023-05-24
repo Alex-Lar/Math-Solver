@@ -1,6 +1,20 @@
+local c = require("colors")
+
+local yellow = c.yellow
+local green = c.green
+local red = c.red
+local cyan = c.cyan
+
+local gameover = false
+local range, rounds
+local scores = 30
+local correct = 0
+local incorrect = 0
+local operation
+
 local function logo()
-	print("\n\tMath Solver")
-	print("\t-----------\n")
+	print("\n\t" .. cyan("Math Solver"))
+	print("\t" .. cyan("-----------") .. "\n")
 end
 
 local function get_answer(oper, x, y)
@@ -16,33 +30,31 @@ local function get_answer(oper, x, y)
 end
 
 local function status_bar(rounds, scores, correct, incorrect, operation)
+	local inc = incorrect == 0 and incorrect or red(incorrect)
+	local corr = correct == 0 and correct or green(correct)
+	scores = scores < 15 and red(scores) or yellow(scores)
+
 	print(
-		"\n\t\t\trounds: "
-			.. rounds
-			.. "\t\t\tscores: "
+		cyan("\n\t\t\trounds: ")
+			.. yellow(rounds)
+			.. cyan("\t\t\tscores: ")
 			.. scores
-			.. "\t\t\tcorrect: "
-			.. correct
-			.. "\t\t\tincorrect: "
-			.. incorrect
-			.. "\t\t\tOperations: "
-			.. operation
+			.. cyan("\t\t\tcorrect: ")
+			.. corr
+			.. cyan("\t\t\tincorrect: ")
+			.. inc
+			.. cyan("\t\t\tOperations: ")
+			.. yellow(operation)
 	)
 
-	print(string.rep("-", 190, ""))
+	-- TODO: Make this responsive
+	print(cyan(string.rep("-", 190, "")))
 end
-
-local gameover = false
-local range, rounds
-local scores = 50
-local correct = 0
-local incorrect = 0
-local operation
 
 os.execute("clear")
 logo()
 
-io.write("\tPlease, input max range for numbers: ")
+io.write("\tPlease, input " .. yellow("max range") .. " for numbers: ")
 range = tonumber(io.read())
 
 if type(range) ~= "number" then
@@ -52,10 +64,10 @@ if type(range) ~= "number" then
 	end
 end
 
-os.execute("clear")
-logo()
+-- os.execute("clear")
+-- logo()
 
-io.write("\tHow many rounds do you want to play: ")
+io.write("\n\tHow many " .. yellow("rounds") .. " do you want to play: ")
 rounds = tonumber(io.read())
 
 if type(rounds) ~= "number" then
@@ -65,10 +77,22 @@ if type(rounds) ~= "number" then
 	end
 end
 
-os.execute("clear")
-logo()
+-- os.execute("clear")
+-- logo()
 
-io.write("\tType of arithmetic operation (+, -, /, *): ")
+io.write(
+	"\n\t"
+		.. yellow("Type")
+		.. " of arithmetic operation ("
+		.. yellow("+")
+		.. ", "
+		.. yellow("-")
+		.. ", "
+		.. yellow("/")
+		.. ", "
+		.. yellow("*")
+		.. "): "
+)
 operation = io.read()
 
 if operation ~= "+" and operation ~= "-" and operation ~= "*" and operation ~= "/" then
@@ -78,8 +102,26 @@ if operation ~= "+" and operation ~= "-" and operation ~= "*" and operation ~= "
 	end
 end
 
-print("\n\tHave a nice game!")
-os.execute("sleep " .. tonumber(1))
+io.write("\n\tColorscheme (y\\n): ")
+local colors = string.lower(io.read())
+
+if colors ~= "y" and colors ~= "n" and colors ~= "yes" and colors ~= "no" then
+	while colors ~= "y" and colors ~= "n" and colors ~= "yes" and colors ~= "no" do
+		io.write("\n\tAnswer should be yes or no (y\n): ")
+		colors = string.lower(io.read())
+	end
+end
+
+print("\n\t" .. green("Have a nice game!"))
+
+if colors == "no" or colors == "n" then
+	cyan = c.white
+	red = c.white
+	yellow = c.white
+	green = c.white
+end
+
+os.execute("sleep " .. 1)
 
 -- Game Loop
 while not gameover do
@@ -89,8 +131,8 @@ while not gameover do
 	local x, y = math.random(range), math.random(range)
 	local true_answer = get_answer(operation, x, y)
 
-	print("\n\tSolve: ")
-	io.write("\t\t" .. x .. " " .. operation .. " " .. y .. " = ")
+	print("\n\t" .. cyan("Solve: "))
+	io.write("\t\t" .. yellow(x) .. " " .. operation .. " " .. yellow(y) .. " = " .. c.YELLOW)
 
 	local answer = tonumber(io.read())
 
@@ -106,7 +148,7 @@ while not gameover do
 	end
 
 	if answer == true_answer then
-		scores = scores + 10
+		scores = scores + 5
 		correct = correct + 1
 	else
 		scores = scores - 10
